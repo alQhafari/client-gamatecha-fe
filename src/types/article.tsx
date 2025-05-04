@@ -1,7 +1,7 @@
 import { ArticleStatus } from "../enums/article-status.enum";
 import { Category } from "./category";
 
-export type Article = {
+export type ArticleType = {
   id: number;
   title: string;
   slug: string;

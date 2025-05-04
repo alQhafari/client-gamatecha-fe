@@ -1,5 +1,4 @@
 "use client";
-import * as React from "react";
 // import {
 //   NavigationMenu,
 //   NavigationMenuItem,
@@ -10,29 +9,29 @@ import * as React from "react";
 // import Image from "next/image";
 // import logo from "../../public/assets/images/Horizontal Putih Merah 0-2.png";
 // import Link from "next/link";
-import { FloatingNav } from "./ui/floating-navbar";
 import { HandCoins, Info, MessageCircle, Users } from "lucide-react";
+import { FloatingNav } from "./ui/floating-navbar";
 
 export function Navbar() {
   const navItems = [
     {
       name: "About",
-      link: "/about",
+      link: "https://gamatecha.com/",
       icon: <Info className="h-6 w-6 text-neutral-500 dark:text-white" />,
     },
     {
       name: "Services",
-      link: "/services",
+      link: "https://gamatecha.com/",
       icon: <HandCoins className="h-6 w-6 text-neutral-500 dark:text-white" />,
     },
     {
       name: "Clients",
-      link: "/clients",
+      link: "https://gamatecha.com/",
       icon: <Users className="h-6 w-6 text-neutral-500 dark:text-white" />,
     },
     {
       name: "Contact",
-      link: "/contact",
+      link: "https://gamatecha.com/",
       icon: (
         <MessageCircle className="h-6 w-6 text-neutral-500 dark:text-white" />
       ),

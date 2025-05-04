@@ -12,11 +12,7 @@ import { RequestError } from "./error";
  *
  * @throws {RequestError} If the response is not ok or if an error occurs during the request.
  */
-export async function request(
-  url: RequestInfo | URL,
-  options?: RequestInit,
-  noAuth?: boolean
-) {
+export async function request(url: RequestInfo | URL, options?: RequestInit) {
   const headers = new Headers(options?.headers);
 
   if (!headers.get("Content-Type")) {

@@ -1,36 +1,43 @@
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
-  PaginationLink,
   PaginationNext,
   PaginationPrevious,
 } from "./ui/pagination";
 
-export function PaginationComponent() {
+export function PaginationComponent({
+  currentPage,
+  totalPage,
+  setPage,
+}: {
+  currentPage: number;
+  totalPage: number;
+  setPage: (page: number) => void;
+}) {
   return (
     <Pagination>
       <PaginationContent>
         <PaginationItem>
-          <PaginationPrevious href="#" />
+          <PaginationPrevious
+            isActive={currentPage > 1}
+            onClick={() => {
+              if (currentPage > 1) {
+                setPage(currentPage - 1);
+              }
+            }}
+          />
         </PaginationItem>
+
         <PaginationItem>
-          <PaginationLink href="#">1</PaginationLink>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationLink href="#" isActive>
-            2
-          </PaginationLink>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationLink href="#">3</PaginationLink>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationEllipsis />
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationNext href="#" />
+          <PaginationNext
+            isActive={currentPage < totalPage}
+            onClick={() => {
+              if (currentPage < totalPage) {
+                setPage(currentPage + 1);
+              }
+            }}
+          />
         </PaginationItem>
       </PaginationContent>
     </Pagination>

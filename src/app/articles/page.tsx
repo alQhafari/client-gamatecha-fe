@@ -1,18 +1,23 @@
 "use client";
 
+import { Categories } from "@/src/components/categories";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { ArticleCard } from "../../components/article-card";
 import { PaginationComponent } from "../../components/pagination";
-import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
-import { useQuery } from "@tanstack/react-query";
 import { fetchArticles } from "../../services/articles/fetchArticles";
-import { Article } from "../../types/article";
-import Link from "next/link";
+import { ArticleType } from "../../types/article";
 
 export default function Article() {
-  const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["articles"],
-    queryFn: fetchArticles,
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState(0);
+  const [page, setPage] = useState(1);
+
+  const { data, isError, error } = useQuery({
+    queryKey: ["articles", { search, category, page }],
+    queryFn: async () =>
+      fetchArticles({ search, categories_id: category, page }),
   });
 
   if (isError) {
@@ -38,119 +43,68 @@ export default function Article() {
 
       <div className="px-12 md:px-24">
         <div className=" items-center justify-items-center pb-20 gap-4 md:gap-2 font-[family-name:var(--font-geist-sans)]">
-          <ArticleCard className="grid grid-cols- md:grid-cols-2 h-full w-full" />
+          <ArticleCard
+            className="grid grid-cols- md:grid-cols-2 h-full w-full"
+            slug={data?.data[0]?.slug}
+            title={data?.data[0]?.title}
+            description={data?.data[0]?.content}
+            imageUrl={data?.data[0]?.mediaUrl}
+            status={data?.data[0]?.status}
+            categories={data?.data[0]?.categories}
+            createdAt={data?.data[0]?.createdAt}
+          />
         </div>
 
         <h2 className={`text-3xl font-bold mb-8`}>Latest News</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 items-center justify-items-center pb-20 gap-4 font-[family-name:var(--font-geist-sans)]">
-          <ArticleCard className="row-span-2 h-full w-full" />
-          <ArticleCard className="row-span-2 h-full w-full" />
-          <ArticleCard className="row-span-2 h-full w-full" />
-          <ArticleCard className="row-span-2 h-full w-full" />
-        </div>
-
-        <h2 className={`text-xl font-bold mb-8`}>All Blogs</h2>
-        <Input
-          className={`mb-8 bg-white/5 rounded-full`}
-          placeholder="Search..."
-        />
-        <div className="flex flex-row justify-between gap-4 mb-8 overflow-scroll">
-          <Button className="rounded-full">Semua</Button>
-          <Button
-            variant={"ghost"}
-            className="rounded-full border border-neutral-200"
-          >
-            Kategori
-          </Button>
-          <Button
-            variant={"ghost"}
-            className="rounded-full border border-neutral-200"
-          >
-            Kategori
-          </Button>
-          <Button
-            variant={"ghost"}
-            className="rounded-full border border-neutral-200"
-          >
-            Kategori
-          </Button>
-          <Button
-            variant={"ghost"}
-            className="rounded-full border border-neutral-200"
-          >
-            Kategori
-          </Button>
-          <Button
-            variant={"ghost"}
-            className="rounded-full border border-neutral-200"
-          >
-            Kategori
-          </Button>
-          <Button
-            variant={"ghost"}
-            className="rounded-full border border-neutral-200"
-          >
-            Kategori
-          </Button>
-          <Button
-            variant={"ghost"}
-            className="rounded-full border border-neutral-200"
-          >
-            Kategori
-          </Button>
-          <Button
-            variant={"ghost"}
-            className="rounded-full border border-neutral-200"
-          >
-            Kategori
-          </Button>
-          <Button
-            variant={"ghost"}
-            className="rounded-full border border-neutral-200"
-          >
-            Kategori
-          </Button>
-          <Button
-            variant={"ghost"}
-            className="rounded-full border border-neutral-200"
-          >
-            Kategori
-          </Button>
-          <Button
-            variant={"ghost"}
-            className="rounded-full border border-neutral-200"
-          >
-            Kategori
-          </Button>
-          <Button
-            variant={"ghost"}
-            className="rounded-full border border-neutral-200"
-          >
-            Kategori
-          </Button>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 items-center justify-items-center pb-20 gap-4 md:gap-2 font-[family-name:var(--font-geist-sans)]">
-          {isLoading && <span>Loading...</span>}
-
-          {data?.data?.map((article: Partial<Article>) => (
-            <Link key={article.id} href={`/articles/${article.slug}`}>
-              <ArticleCard
-                key={article.id}
-                title={`${article?.title?.slice(0, 50)}...`}
-                description={`${article?.content?.slice(0, 100)}...`}
-                imageUrl={article.mediaUrl}
-                author={{
-                  name: "John Doe",
-                  avatar: "https://i.pravatar.cc/300",
-                }}
-                readTime={"5 min read"}
-                status={article.status}
-              />
-            </Link>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 items-center justify-items-center pb-20 gap-4 font-[family-name:var(--font-geist-sans)]">
+          {data?.data?.slice(1, 5).map((item, index) => (
+            <ArticleCard
+              key={index}
+              slug={item.slug}
+              title={item.title}
+              description={item.content}
+              imageUrl={item.mediaUrl}
+              status={item.status}
+              categories={item.categories}
+              createdAt={item.createdAt}
+            />
           ))}
         </div>
 
-        <PaginationComponent />
+        <h2 className={`text-xl font-bold mb-8`}>All Blogs</h2>
+
+        <Input
+          className={`mb-8 bg-white/5 rounded-full`}
+          placeholder="Search..."
+          value={search}
+          onChange={(e) => {
+            const search = e.target.value;
+            setSearch(search);
+          }}
+        />
+
+        <Categories selected={category} setSelected={setCategory} />
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 items-center justify-items-center pb-20 gap-4 md:gap-2 font-[family-name:var(--font-geist-sans)]">
+          {data?.data?.map((article: Partial<ArticleType>) => (
+            <ArticleCard
+              slug={article.slug}
+              key={article.id}
+              title={`${article?.title?.slice(0, 50)}...`}
+              description={`${article?.content?.slice(0, 100)}...`}
+              imageUrl={article.mediaUrl}
+              status={article.status}
+              categories={article.categories}
+              createdAt={article.createdAt}
+            />
+          ))}
+        </div>
+
+        <PaginationComponent
+          currentPage={data?.meta.page || 1}
+          totalPage={data?.meta.totalPage || 1}
+          setPage={setPage}
+        />
       </div>
     </>
   );
