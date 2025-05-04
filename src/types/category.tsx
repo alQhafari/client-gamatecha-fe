@@ -1,4 +1,4 @@
-import { Article } from "./article";
+import { ArticleType } from "./article";
 
 export type Category = {
   id: number;
@@ -6,5 +6,5 @@ export type Category = {
   totalPost?: number;
   createdAt?: string;
   updatedAt?: string;
-  articles?: Article[];
+  articles?: ArticleType[];
 };
