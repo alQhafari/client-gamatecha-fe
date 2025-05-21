@@ -12,12 +12,10 @@ import { ArticleType } from "../../types/article";
 export default function Article() {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState(0);
-  const [page, setPage] = useState(1);
 
   const { data, isError, error } = useQuery({
-    queryKey: ["articles", { search, category, page }],
-    queryFn: async () =>
-      fetchArticles({ search, categories_id: category, page }),
+    queryKey: ["articles", { search, category }],
+    queryFn: async () => fetchArticles({ search, categories_id: category }),
   });
 
   if (isError) {
