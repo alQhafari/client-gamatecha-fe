@@ -2,9 +2,9 @@
 
 import { Categories } from "@/src/components/categories";
 import { useQuery } from "@tanstack/react-query";
+import Link from "next/link";
 import { useState } from "react";
 import { ArticleCard } from "../../components/article-card";
-import { PaginationComponent } from "../../components/pagination";
 import { Input } from "../../components/ui/input";
 import { fetchArticles } from "../../services/articles/fetchArticles";
 import { ArticleType } from "../../types/article";
@@ -35,9 +35,11 @@ export default function Article() {
           <br /> & Innovations
         </h1>
         <div className="mt-8">
-          <button className="px-8 py-3 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-all">
-            Explore Articles
-          </button>
+          <Link href={"/explore"}>
+            <button className="px-8 py-3 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-all">
+              Explore Articles
+            </button>
+          </Link>
         </div>
       </div>
 
@@ -100,11 +102,13 @@ export default function Article() {
           ))}
         </div>
 
-        <PaginationComponent
-          currentPage={data?.meta.page || 1}
-          totalPage={data?.meta.totalPage || 1}
-          setPage={setPage}
-        />
+        <div className="flex justify-center">
+          <Link href={"/explore"}>
+            <button className="px-8 py-3 bg-white text-black rounded-xl hover:bg-gray-700 hover:text-white transition-all">
+              Show More
+            </button>
+          </Link>
+        </div>
       </div>
     </>
   );
